@@ -11,6 +11,8 @@ import type {
   IAdminBookingItem,
   IAdminBookingListResponse,
   IAdminDashboardResponse,
+  IAdminAnalyticsResponse,
+  IAnalyticsDayData,
 } from '../../types/admin.types';
 
 function makeError(message: string, statusCode: number): Error & { statusCode: number } {
@@ -128,4 +130,44 @@ export async function getDashboardStats(): Promise<IAdminDashboardResponse> {
     ]);
 
   return { totalTrips, totalBuses, totalRoutes, totalBookings, confirmedBookings };
+}
+
+export async function getAnalyticsData(): Promise<IAdminAnalyticsResponse> {
+  const now = new Date();
+  const from = new Date(now);
+  from.setDate(now.getDate() - 29);
+  from.setHours(0, 0, 0, 0);
+
+  type AggRow = { date: string; bookings: number; seats: number; revenue: number };
+
+  const rawRows = await Booking.aggregate<AggRow>([
+    { $match: { bookedAt: { $gte: from }, bookingStatus: 'confirmed' } },
+    {
+      $group: {
+        _id: { $dateToString: { format: '%Y-%m-%d', date: '$bookedAt' } },
+        bookings: { $sum: 1 },
+        seats: { $sum: { $size: '$seatNumbers' } },
+        revenue: { $sum: '$totalAmount' },
+      },
+    },
+    { $sort: { _id: 1 } },
+    { $project: { _id: 0, date: '$_id', bookings: 1, seats: 1, revenue: 1 } },
+  ]).exec();
+
+  const dataMap = new Map<string, AggRow>(rawRows.map((r) => [r.date, r]));
+
+  const days: IAnalyticsDayData[] = [];
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(from);
+    d.setDate(from.getDate() + i);
+    const dateStr = d.toISOString().slice(0, 10);
+    days.push(dataMap.get(dateStr) ?? { date: dateStr, bookings: 0, seats: 0, revenue: 0 });
+  }
+
+  return {
+    days,
+    totalBookings: days.reduce((s, d) => s + d.bookings, 0),
+    totalSeats: days.reduce((s, d) => s + d.seats, 0),
+    totalRevenue: days.reduce((s, d) => s + d.revenue, 0),
+  };
 }

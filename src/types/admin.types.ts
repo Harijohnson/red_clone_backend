@@ -163,3 +163,21 @@ export interface IAdminDashboardResponse {
   totalBookings: number;
   confirmedBookings: number;
 }
+
+// ---------------------------------------------------------------------------
+// Analytics
+// ---------------------------------------------------------------------------
+
+export interface IAnalyticsDayData {
+  date: string;
+  bookings: number;
+  seats: number;
+  revenue: number;
+}
+
+export interface IAdminAnalyticsResponse {
+  days: IAnalyticsDayData[];
+  totalBookings: number;
+  totalSeats: number;
+  totalRevenue: number;
+}

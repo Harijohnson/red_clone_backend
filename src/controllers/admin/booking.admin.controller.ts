@@ -3,6 +3,7 @@ import {
   listAllBookings,
   cancelBooking,
   getDashboardStats,
+  getAnalyticsData,
 } from '../../services/admin/booking.admin.service';
 
 // GET /api/admin/bookings
@@ -44,6 +45,20 @@ export async function getDashboardHandler(
 ): Promise<void> {
   try {
     const result = await getDashboardStats();
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// GET /api/admin/analytics
+export async function getAnalyticsHandler(
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const result = await getAnalyticsData();
     res.status(200).json(result);
   } catch (err) {
     next(err);

@@ -5,11 +5,15 @@ import routeRouter from './route.routes';
 import bookingRouter from './booking.routes';
 import { authenticate } from '../../middleware/authenticate';
 import { authorize } from '../../middleware/authorize';
-import { getDashboardHandler } from '../../controllers/admin/booking.admin.controller';
+import {
+  getDashboardHandler,
+  getAnalyticsHandler,
+} from '../../controllers/admin/booking.admin.controller';
 
 const router = Router();
 
 router.get('/dashboard', authenticate, authorize('admin', 'operator'), getDashboardHandler);
+router.get('/analytics', authenticate, authorize('admin', 'operator'), getAnalyticsHandler);
 
 router.use('/trips', tripRouter);
 router.use('/buses', busRouter);
