@@ -13,7 +13,7 @@ export function errorHandler(
   const statusCode = err.statusCode ?? 500;
   const message = statusCode === 500 ? 'Internal Server Error' : err.message;
 
-  if (statusCode === 500 && process.env.NODE_ENV !== 'production') {
+  if (statusCode === 500) {
     console.error(err);
   }
 
