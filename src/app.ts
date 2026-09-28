@@ -5,6 +5,7 @@ import authRouter from './routes/auth.routes';
 import tripRouter from './routes/trip.routes';
 import seatRouter from './routes/seat.routes';
 import bookingRouter from './routes/booking.routes';
+import adminRouter from './routes/admin/index.routes';
 import { notFound } from './middleware/notFound';
 import { errorHandler } from './middleware/errorHandler';
 
@@ -33,6 +34,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/trips', tripRouter);
 app.use('/api/trips/:tripId', seatRouter);
 app.use('/api/bookings', bookingRouter);
+app.use('/api/admin', adminRouter);
 
 app.use('/api', notFound);
 
