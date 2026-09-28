@@ -10,8 +10,19 @@ import { errorHandler } from './middleware/errorHandler';
 
 const app: Application = express();
 
+const ALLOWED_ORIGINS = [
+  /\.vercel\.app$/,
+  /^http:\/\/localhost:\d+$/,
+];
+
 app.use(cors({
-  origin: true,
+  origin: (origin, callback) => {
+    if (!origin || ALLOWED_ORIGINS.some((o) => o.test(origin))) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    }
+  },
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
