@@ -14,6 +14,7 @@ export interface ISeatLayout {
   row: number;
   column: number;
   type: SeatPositionType;
+  isFemaleSeat: boolean;
 }
 
 export interface IBus {

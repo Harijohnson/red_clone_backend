@@ -3,6 +3,7 @@ import cors from 'cors';
 import healthRouter from './routes/health.routes';
 import authRouter from './routes/auth.routes';
 import tripRouter from './routes/trip.routes';
+import citiesRouter from './routes/cities.routes';
 import seatRouter from './routes/seat.routes';
 import bookingRouter from './routes/booking.routes';
 import adminRouter from './routes/admin/index.routes';
@@ -31,6 +32,7 @@ app.use(express.json());
 
 app.use('/api/health', healthRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/cities', citiesRouter);
 app.use('/api/trips', tripRouter);
 app.use('/api/trips/:tripId', seatRouter);
 app.use('/api/bookings', bookingRouter);

@@ -103,6 +103,7 @@ export async function getSeats(
         inv.status === 'reserved' &&
         requestingUserId != null &&
         inv.reservedBy?.toString() === requestingUserId,
+      isFemaleSeat: layout.isFemaleSeat ?? false,
     };
   });
 

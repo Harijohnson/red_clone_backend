@@ -16,6 +16,10 @@ const seatLayoutSchema = new Schema(
       enum: ['window', 'aisle', 'middle'] as const,
       required: true,
     },
+    isFemaleSeat: {
+      type: Boolean,
+      default: false,
+    },
   },
   { _id: false }
 );

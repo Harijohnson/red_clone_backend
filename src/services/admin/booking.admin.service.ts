@@ -40,35 +40,41 @@ export async function listAllBookings(
     Booking.countDocuments(),
   ]);
 
-  const items: IAdminBookingItem[] = bookings.map((b) => {
-    const user = b.user as IUserDocument;
-    const trip = b.trip as unknown as ITripDocument & { bus: IBusDocument; route: IRouteDocument };
-    const bus = trip.bus as IBusDocument;
-    const route = trip.route as IRouteDocument;
+  const items: IAdminBookingItem[] = bookings
+    .filter((b) => {
+      const trip = b.trip as unknown as (ITripDocument & { bus: IBusDocument; route: IRouteDocument }) | null;
+      const user = b.user as IUserDocument | null;
+      return trip && trip.bus && trip.route && user;
+    })
+    .map((b) => {
+      const user = b.user as IUserDocument;
+      const trip = b.trip as unknown as ITripDocument & { bus: IBusDocument; route: IRouteDocument };
+      const bus = trip.bus as IBusDocument;
+      const route = trip.route as IRouteDocument;
 
-    return {
-      bookingId: b._id.toString(),
-      bookingReference: b.bookingReference,
-      bookingStatus: b.bookingStatus,
-      paymentStatus: b.paymentStatus,
-      bookedAt: b.bookedAt.toISOString(),
-      totalAmount: b.totalAmount,
-      seats: b.seatNumbers,
-      passengerCount: b.passengers.length,
-      user: {
-        userId: user._id.toString(),
-        name: user.name,
-        email: user.email,
-      },
-      trip: {
-        tripId: trip._id.toString(),
-        source: route.source,
-        destination: route.destination,
-        departureTime: trip.departureTime.toISOString(),
-        busName: bus.name,
-      },
-    };
-  });
+      return {
+        bookingId: b._id.toString(),
+        bookingReference: b.bookingReference,
+        bookingStatus: b.bookingStatus,
+        paymentStatus: b.paymentStatus,
+        bookedAt: b.bookedAt.toISOString(),
+        totalAmount: b.totalAmount,
+        seats: b.seatNumbers,
+        passengerCount: b.passengers.length,
+        user: {
+          userId: user._id.toString(),
+          name: user.name,
+          email: user.email,
+        },
+        trip: {
+          tripId: trip._id.toString(),
+          source: route.source,
+          destination: route.destination,
+          departureTime: trip.departureTime.toISOString(),
+          busName: bus.name,
+        },
+      };
+    });
 
   return {
     bookings: items,

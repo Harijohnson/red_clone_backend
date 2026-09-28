@@ -54,6 +54,7 @@ function generateSeatLayout(
         row: Math.floor(i / 2) + 1,
         column: (i % 2) + 1,
         type: i % 2 === 0 ? 'window' : 'aisle',
+        isFemaleSeat: false,
       });
     }
     for (let i = 0; i < upperCount; i++) {
@@ -63,6 +64,7 @@ function generateSeatLayout(
         row: Math.floor(i / 2) + 1,
         column: (i % 2) + 1,
         type: i % 2 === 0 ? 'window' : 'aisle',
+        isFemaleSeat: false,
       });
     }
   } else {
@@ -77,6 +79,7 @@ function generateSeatLayout(
         row,
         column: col,
         type: positionMap[col - 1],
+        isFemaleSeat: false,
       });
     }
   }

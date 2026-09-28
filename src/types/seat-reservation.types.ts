@@ -26,6 +26,7 @@ export interface ISeatAvailabilityEntry {
   position: SeatPositionType;
   price: number;
   isLockedByMe: boolean;
+  isFemaleSeat: boolean;
 }
 
 export interface ITripSeatsResponse {
